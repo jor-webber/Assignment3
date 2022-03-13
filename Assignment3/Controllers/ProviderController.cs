@@ -10,25 +10,41 @@ using Assignment3.Models;
 
 namespace Assignment3.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
-    public class ProvidersController : ControllerBase
+    public class ProviderController : ControllerBase
     {
         private readonly Assignment3Context _context;
 
-        public ProvidersController(Assignment3Context context)
+        public ProviderController(Assignment3Context context)
         {
             _context = context;
         }
 
-        // GET: api/Providers
+        // GET: api/Provider
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Provider>>> GetProvider()
+        public async Task<ActionResult<IEnumerable<Provider>>> GetProvider(string firstName, string lastName, int licenseNumber)
         {
+
+            if (firstName != null)
+            {
+                return await _context.Provider.Where(p => p.FirstName == firstName).ToListAsync();
+            }
+
+            if (lastName != null)
+            {
+                return await _context.Provider.Where(p => p.LastName == lastName).ToListAsync();
+            }
+
+            if (licenseNumber > -1)
+            {
+                return await _context.Provider.Where(p => p.Equals(licenseNumber)).ToListAsync();
+            }
+
             return await _context.Provider.ToListAsync();
         }
 
-        // GET: api/Providers/5
+        // GET: api/Provider/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Provider>> GetProvider(Guid id)
         {
@@ -42,7 +58,7 @@ namespace Assignment3.Controllers
             return provider;
         }
 
-        // PUT: api/Providers/5
+        // PUT: api/Provider/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
