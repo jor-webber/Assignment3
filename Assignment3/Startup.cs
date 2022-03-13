@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Assignment3.Data;
 
 namespace Assignment3
 {
@@ -26,6 +28,9 @@ namespace Assignment3
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddDbContext<Assignment3Context>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("Assignment3Context")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
