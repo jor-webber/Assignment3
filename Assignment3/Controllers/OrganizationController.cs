@@ -12,23 +12,33 @@ namespace Assignment3.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OrganizationsController : ControllerBase
+    public class OrganizationController : ControllerBase
     {
         private readonly Assignment3Context _context;
 
-        public OrganizationsController(Assignment3Context context)
+        public OrganizationController(Assignment3Context context)
         {
             _context = context;
         }
 
-        // GET: api/Organizations
+        // GET: /Organization
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Organization>>> GetOrganization()
+        public async Task<ActionResult<IEnumerable<Organization>>> GetOrganization(string name, string type)
         {
+            if (name != null)
+            {
+                return await _context.Organization.Where(o => o.Name == name).ToListAsync();
+            }
+
+            if (type != null)
+            {
+                return await _context.Organization.Where(o => o.Type == type).ToListAsync();
+            }
+
             return await _context.Organization.ToListAsync();
         }
 
-        // GET: api/Organizations/5
+        // GET: /Organization/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Organization>> GetOrganization(Guid id)
         {
@@ -74,7 +84,7 @@ namespace Assignment3.Controllers
             return NoContent();
         }
 
-        // POST: api/Organizations
+        // POST: /Organization
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
@@ -86,7 +96,7 @@ namespace Assignment3.Controllers
             return CreatedAtAction("GetOrganization", new { id = organization.Id }, organization);
         }
 
-        // DELETE: api/Organizations/5
+        // DELETE: api/Organization/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Organization>> DeleteOrganization(Guid id)
         {
