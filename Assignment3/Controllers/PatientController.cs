@@ -16,13 +16,15 @@ namespace Assignment3.Controllers
     public class PatientController : ControllerBase
     {
         private readonly Assignment3Context _context;
+        private readonly ILogger _logger;
 
-        public PatientController(Assignment3Context context)
+        public PatientController(Assignment3Context context, ILogger<PatientController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
-        // GET: api/Patients
+        // GET: api/Patient
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Patient>>> GetPatient(string firstName, string lastName, string dateOfBirth)
         {
@@ -45,7 +47,7 @@ namespace Assignment3.Controllers
             return await _context.Patient.ToListAsync();
         }
 
-        // GET: api/Patients/5
+        // GET: api/Patient/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Patient>> GetPatient(Guid id)
         {
@@ -53,13 +55,14 @@ namespace Assignment3.Controllers
 
             if (patient == null)
             {
+                _logger.LogError($"Could not find patient with id: {id}.");
                 return NotFound();
             }
 
             return patient;
         }
 
-        // PUT: api/Patients/5
+        // PUT: api/Patient/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
@@ -67,6 +70,7 @@ namespace Assignment3.Controllers
         {
             if (id != patient.Id)
             {
+                _logger.LogError($"Unable to update patient with id: {id}");
                 return BadRequest();
             }
 
@@ -80,6 +84,7 @@ namespace Assignment3.Controllers
             {
                 if (!PatientExists(id))
                 {
+                    _logger.LogError($"No patient found with id: {id}");
                     return NotFound();
                 }
                 else
@@ -110,6 +115,7 @@ namespace Assignment3.Controllers
             var patient = await _context.Patient.FindAsync(id);
             if (patient == null)
             {
+                _logger.LogError($"No patient found with id: {id}");
                 return NotFound();
             }
 

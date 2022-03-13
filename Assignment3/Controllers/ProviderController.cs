@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Assignment3.Data;
 using Assignment3.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Assignment3.Controllers
 {
@@ -15,10 +16,12 @@ namespace Assignment3.Controllers
     public class ProviderController : ControllerBase
     {
         private readonly Assignment3Context _context;
+        private readonly ILogger _logger;
 
-        public ProviderController(Assignment3Context context)
+        public ProviderController(Assignment3Context context, ILogger<ProviderController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/Provider
