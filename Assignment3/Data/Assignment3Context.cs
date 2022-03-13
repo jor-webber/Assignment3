@@ -16,12 +16,12 @@ namespace Assignment3.Data
         {
         }
 
-        public DbSet<Assignment3.Models.Provider> Provider { get; set; }
+        public DbSet<Provider> Provider { get; set; }
 
-        public DbSet<W7D2_webAPI.Models.Immunization> Immunization { get; set; }
+        public DbSet<Immunization> Immunization { get; set; }
 
-        public DbSet<W7D2_webAPI.Models.Organization> Organization { get; set; }
+        public DbSet<Organization> Organization { get; set; }
 
-        public DbSet<assignment3.Models.Patient> Patient { get; set; }
+        public DbSet<Patient> Patient { get; set; }
     }
 }
