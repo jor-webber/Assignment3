@@ -55,6 +55,7 @@ namespace Assignment3.Controllers
 
             if (provider == null)
             {
+                _logger.LogError($"Could not find provider with id: {id}");
                 return NotFound();
             }
 
@@ -69,6 +70,7 @@ namespace Assignment3.Controllers
         {
             if (id != provider.Id)
             {
+                _logger.LogError($"Bad request with provider with id: {id}");
                 return BadRequest();
             }
 
@@ -82,6 +84,7 @@ namespace Assignment3.Controllers
             {
                 if (!ProviderExists(id))
                 {
+                    _logger.LogError($"Provider with id: {id} not found.");
                     return NotFound();
                 }
                 else
@@ -112,6 +115,7 @@ namespace Assignment3.Controllers
             var provider = await _context.Provider.FindAsync(id);
             if (provider == null)
             {
+                _logger.LogError($"Provider with id: {id} not found.");
                 return NotFound();
             }
 

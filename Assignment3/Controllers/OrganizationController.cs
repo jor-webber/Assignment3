@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Assignment3.Data;
+using Microsoft.Extensions.Logging;
 using W7D2_webAPI.Models;
 
 namespace Assignment3.Controllers
@@ -15,10 +16,12 @@ namespace Assignment3.Controllers
     public class OrganizationController : ControllerBase
     {
         private readonly Assignment3Context _context;
+        private readonly ILogger _logger;
 
-        public OrganizationController(Assignment3Context context)
+        public OrganizationController(Assignment3Context context, Logger<OrganizationController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: /Organization
@@ -46,6 +49,7 @@ namespace Assignment3.Controllers
 
             if (organization == null)
             {
+                _logger.LogError($"Could not find organization with id: {id}");
                 return NotFound();
             }
 
@@ -60,6 +64,7 @@ namespace Assignment3.Controllers
         {
             if (id != organization.Id)
             {
+                _logger.LogError($"Unable to updated orgaization with id: {id}");
                 return BadRequest();
             }
 
@@ -73,6 +78,7 @@ namespace Assignment3.Controllers
             {
                 if (!OrganizationExists(id))
                 {
+                    _logger.LogError($"Could not find organization with id: {id}");
                     return NotFound();
                 }
                 else
@@ -103,6 +109,7 @@ namespace Assignment3.Controllers
             var organization = await _context.Organization.FindAsync(id);
             if (organization == null)
             {
+                _logger.LogError($"Could not find organization with id: {id}");
                 return NotFound();
             }
 

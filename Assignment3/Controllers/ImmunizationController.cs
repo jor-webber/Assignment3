@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Assignment3.Data;
+using Microsoft.Extensions.Logging;
 using W7D2_webAPI.Models;
 
 namespace Assignment3.Controllers
@@ -15,10 +16,12 @@ namespace Assignment3.Controllers
     public class ImmunizationController : ControllerBase
     {
         private readonly Assignment3Context _context;
+        private readonly ILogger _logger;
 
-        public ImmunizationController(Assignment3Context context)
+        public ImmunizationController(Assignment3Context context, Logger<ImmunizationController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: /Immunization
@@ -55,6 +58,7 @@ namespace Assignment3.Controllers
 
             if (immunization == null)
             {
+                _logger.LogError($"Could not find immunization with id: {id}");
                 return NotFound();
             }
 
@@ -69,6 +73,7 @@ namespace Assignment3.Controllers
         {
             if (id != immunization.Id)
             {
+                _logger.LogError($"Could not update immunization with id: {id}");
                 return BadRequest();
             }
 
@@ -82,6 +87,7 @@ namespace Assignment3.Controllers
             {
                 if (!ImmunizationExists(id))
                 {
+                    _logger.LogError($"Could not find immunization with id: {id}");
                     return NotFound();
                 }
                 else
@@ -112,6 +118,7 @@ namespace Assignment3.Controllers
             var immunization = await _context.Immunization.FindAsync(id);
             if (immunization == null)
             {
+                _logger.LogError($"Could not find immunization with id: {id}");
                 return NotFound();
             }
 
