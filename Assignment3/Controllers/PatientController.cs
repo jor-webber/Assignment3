@@ -7,24 +7,41 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Assignment3.Data;
 using assignment3.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Assignment3.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
-    public class PatientsController : ControllerBase
+    public class PatientController : ControllerBase
     {
         private readonly Assignment3Context _context;
 
-        public PatientsController(Assignment3Context context)
+        public PatientController(Assignment3Context context)
         {
             _context = context;
         }
 
         // GET: api/Patients
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Patient>>> GetPatient()
+        public async Task<ActionResult<IEnumerable<Patient>>> GetPatient(string firstName, string lastName, string dateOfBirth)
         {
+            if (firstName != null)
+            {
+                return await _context.Patient.Where(p => p.FirstName == firstName).ToListAsync();
+            }
+
+            if (lastName != null)
+            {
+                return await _context.Patient.Where(p => p.LastName == lastName).ToListAsync();
+            }
+
+            if (dateOfBirth != null)
+            {
+                var birthDate = DateTimeOffset.Parse(dateOfBirth);
+                return await _context.Patient.Where(p => p.DateOfBirth == birthDate).ToListAsync();
+            }
+
             return await _context.Patient.ToListAsync();
         }
 
@@ -59,7 +76,7 @@ namespace Assignment3.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
                 if (!PatientExists(id))
                 {
@@ -78,7 +95,7 @@ namespace Assignment3.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Patient>> PostPatient(Patient patient)
+        public async Task<ActionResult<Patient>> PostPatient([FromBody] Patient patient)
         {
             _context.Patient.Add(patient);
             await _context.SaveChangesAsync();
